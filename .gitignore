@@ -1,0 +1,7 @@
+choc
+choc.txt
+*.gcno
+error
+*gcda
+unit_tests
+*.log
