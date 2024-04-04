@@ -14,7 +14,7 @@ jobs:
     container: epitechcontent/epitest-docker
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@master
       - name: Compile program
         run: make
         timeout-minutes: 2
@@ -35,7 +35,7 @@ jobs:
     container: epitechcontent/epitest-docker
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@master
       - name: Run tests
         run: make tests_run
         timeout-minutes: 2
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@master
         with:
             fetch-depth: 0
       - name: Mirror repository
