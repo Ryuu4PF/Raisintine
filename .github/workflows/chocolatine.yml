@@ -13,32 +13,32 @@ jobs:
     runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
     steps:
+        - name: Checkout GitHub repository
+          uses: actions/checkout@v2
 
-      - name: Checkout GH repository
-        uses: actions/checkout@master
-        with:
-          repository: ''
+        - name: Execute coding style check
+          run: ./check.sh . /tmp
 
-      - name: Run coding-style
-        run: check.sh . /tmp
+        - name: Generate coding style error annotations
+          run: |
+            log_file="/tmp/coding-style-reports.log"
+            while IFS= read -r line; do
+              file=$(echo "$line" | cut -d':' -f1)
+              line_number=$(echo "$line" | cut -d':' -f2)
+              title=$(echo "$line" | cut -d':' -f3)
+              detail=$(echo "$line" | cut -d':' -f4)
+              echo "::error title=$title coding style error,file=$file,line=$line_number::$detail"
+            done < "$log_file"
 
-      - name: Create annotation for coding-style errors
-        run: |
-          input=/tmp/coding-style-reports.log
-          while IFS= read -r -a line; do
-            fields=($(printf "%s" "$line"|cut -d':' --output-delimiter=' ' -f1-))
-            echo "::error title=${fields[2]} coding style error,file=${fields[0]},line=${fields[1]}::${fields[3]}"
-          done < $input
-
-      - name: banana result and fail if errors found
-        run: |
-          errors_count=$(wc -l < /tmp/coding-style-reports.log)
-          if [ "$errors_count" -gt 0 ]; then
-            echo "Found $errors_count coding style errors."
-            exit 1
-          else
-            echo "No coding style errors found."
-          fi
+        - name: Output result and fail if errors found
+          run: |
+            errors_count=$(wc -l < /tmp/coding-style-reports.log)
+            if [ "$errors_count" -gt 0 ]; then
+              echo "Found $errors_count coding style errors."
+              exit 1
+            else
+              echo "No coding style errors found."
+            fi
 
   check_program_compilation:
     needs: check_coding_style
@@ -52,7 +52,7 @@ jobs:
         timeout-minutes: 2
       - name: Clean up
         run: make clean
-      - name: Check executables
+      - name: binary
         run: |
           for executable in ${EXECUTABLES//,/ }; do
             if [ ! -x "$executable" ]; then
