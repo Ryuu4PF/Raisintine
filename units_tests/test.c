@@ -12,5 +12,5 @@ test(crit, check)
 {
     int ac = 0;
 
-    cr_assert(main(ac) == 84);
+    cr_assert(main(ac) == 84)
 }

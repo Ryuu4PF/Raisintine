@@ -40,7 +40,7 @@ jobs:
   check_program_compilation:
     needs: check_coding_style
     runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker
+    container: epitechcontent/epitest-docker:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -61,10 +61,9 @@ jobs:
   run_tests:
     needs: check_program_compilation
     runs-on: ubuntu-latest
-    container: epitechcontent/epitest-docker
+    container: epitechcontent/epitest-docker:latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@master
+      - uses: actions/checkout@master
       - name: Run tests
         run: make tests_run
         timeout-minutes: 2
