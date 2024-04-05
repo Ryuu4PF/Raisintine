@@ -19,7 +19,7 @@ jobs:
           repository: ''
       - name: Run coding-style
         run: check.sh . /tmp
-      - name: Create annotation for coding-style errors
+      - name: parsing for annotation
         run: |
           log_file="/tmp/coding-style-reports.log"
           while IFS= read -r line; do
@@ -29,10 +29,10 @@ jobs:
             detail=$(echo "$line" | cut -d':' -f4)
             echo "::error title=$title coding style error,file=$file,line=$line_number::$detail"
           done < "$log_file"
-      - name: Report bananaresult and fail if errors found
+      - name: banana error count
         run: |
-          NB_ERROR=$(cat /tmp/coding-style-reports.log | wc -l)
-          if [ $NB_ERROR -gt 0 ]; then
+          $errors_count=$(cat /tmp/coding-style-reports.log | wc -l)
+          if [ $$errors_count -gt 0 ]; then
             exit 1
           fi
 
@@ -50,9 +50,9 @@ jobs:
         run: make clean
       - name: Check executables
         run: |
-          for executable in ${EXECUTABLES//,/ }; do
-            if [ ! -x "$executable" ]; then
-              echo "::error file=$executable,::Executable not found or not executable"
+          for file in $EXECUTABLES; do
+            if [ ! -x "$file" ]; then
+              echo "Error: '$file' not executable or missing."
               exit 1
             fi
           done
