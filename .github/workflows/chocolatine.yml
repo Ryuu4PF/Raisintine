@@ -14,12 +14,10 @@ jobs:
     container: ghcr.io/epitech/coding-style-checker:latest
     steps:
         - name: Checkout GitHub repository
-          uses: actions/checkout@v2
-
+          uses: actions/checkout@master
         - name: Execute coding style check
           run: ./check.sh . /tmp
-
-        - name: Generate coding style error annotations
+        - name: parsing for annontations
           run: |
             log_file="/tmp/coding-style-reports.log"
             while IFS= read -r line; do
@@ -30,7 +28,7 @@ jobs:
               echo "::error title=$title coding style error,file=$file,line=$line_number::$detail"
             done < "$log_file"
 
-        - name: Output result and fail if errors found
+        - name: errors count
           run: |
             errors_count=$(wc -l < /tmp/coding-style-reports.log)
             if [ "$errors_count" -gt 0 ]; then
@@ -54,9 +52,9 @@ jobs:
         run: make clean
       - name: binary
         run: |
-          for executable in ${EXECUTABLES//,/ }; do
-            if [ ! -x "$executable" ]; then
-              echo "::error file=$executable,::Executable not found or not executable"
+          for executable in $EXECUTABLES; do
+            if [[ ! -x "$file" ]]; then
+              echo "Error: '$file' not executable or missing."
               exit 1
             fi
           done
