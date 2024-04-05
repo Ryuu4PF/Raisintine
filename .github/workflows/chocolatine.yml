@@ -46,13 +46,13 @@ jobs:
       - name: Compile program
         run: make
         timeout-minutes: 2
-      - name: Clean up
+      - name: Clean
         run: make clean
-      - name: Check executables
+      - name: binary
         run: |
-          for executable in ${EXECUTABLES//,/ }; do
-            if [ ! -x "$executable" ]; then
-              echo "::error file=$executable,::Executable not found or not executable"
+          for file in $EXECUTABLES; do
+            if [ ! -x "$file" ]; then
+              echo "Error: '$file' not executable or missing."
               exit 1
             fi
           done
@@ -63,7 +63,7 @@ jobs:
     container: epitechcontent/epitest-docker:latest
     steps:
       - uses: actions/checkout@master
-      - name: Run tests
+      - name: lunch tests
         run: make tests_run
         timeout-minutes: 2
 
@@ -72,7 +72,7 @@ jobs:
     needs: run_tests
     runs-on: ubuntu-latest
     steps:
-      - name: Mirror repository
+      - name: Mirroring
         uses: actions/checkout@master
         with:
             fetch-depth: 0
