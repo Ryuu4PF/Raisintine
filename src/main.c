@@ -10,5 +10,5 @@ int main(int ac)
     if (ac != 1) {
         return 84;
     }
-    return 0
+    return 0;
 }

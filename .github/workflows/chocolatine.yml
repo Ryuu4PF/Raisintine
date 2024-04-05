@@ -30,11 +30,14 @@ jobs:
             echo "::error title=${fields[2]} coding style error,file=${fields[0]},line=${fields[1]}::${fields[3]}"
           done < $input
 
-      - name: Report banana result
+      - name: banana result and fail if errors found
         run: |
-          NB_ERROR=$(cat /tmp/coding-style-reports.log | wc -l)
-          if [ $NB_ERROR -gt 0 ]; then
+          errors_count=$(wc -l < /tmp/coding-style-reports.log)
+          if [ "$errors_count" -gt 0 ]; then
+            echo "Found $errors_count coding style errors."
             exit 1
+          else
+            echo "No coding style errors found."
           fi
 
   check_program_compilation:
